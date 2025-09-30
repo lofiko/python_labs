@@ -45,7 +45,7 @@ m = int(input("Минуты: "))
 hours = m // 60 
 minutes = m % 60
 
-print(f"{hours}:{minutes}")  
+print(f"{hours}:{minutes:02d}") 
 ```
 ![Картинка 4](./images/lab_01/lab01_photo04.png)
 
