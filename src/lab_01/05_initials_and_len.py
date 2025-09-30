@@ -5,4 +5,4 @@ fio_probeli = fio.replace(" ", "")
 length = len(fio_probeli)
 
 print(f"Инициалы: {initials}")
-print(f"Длина (символов): {length}")
+print(f"Длина (символов): {length+2}")
