@@ -1,213 +1,224 @@
-# Лабороторная работа 3
+# Лабороторная работа 5
 
-# Задание A
-## normalize
-
-```python
-def normalize(text: str, *, casefold: bool = True, yo2e: bool = True) -> str:
-    result = text
-    
-    if casefold:
-        result = result.casefold()    
-    if yo2e:
-        result = result.replace('ё', 'е').replace('Ё', 'е')
-    
-    for char in ['\t', '\r', '\n']:
-        result = result.replace(char, ' ')
-    
-    result = re.sub(r'\s+', ' ', result).strip()
-    return result
-```
-## tokenize
-
-```python
-def tokenize(text: str) -> List[str]:
-    pattern = r'\w+(?:-\w+)*'
-    tokens = re.findall(pattern, text)
-    return tokens
-```
-## count_freq
-
-```python
-def count_freq(tokens: List[str]) -> Dict[str, int]:
-    frequency_dict = {}
-    for token in tokens:
-        frequency_dict[token] = frequency_dict.get(token, 0) + 1
-    return frequency_dict
-```
-
-## top_N
-
-```python
-def top_n(freq: Dict[str, int], n: int = 5) -> List[Tuple[str, int]]:
-    items = list(freq.items())
-    sorted_items = sorted(items, key=lambda x: (-x[1], x[0]))
-    return sorted_items[:n]
-```
-
-## Тест-кейсы
-
-```python
-print(normalize("ПрИвЕт\nМИр\t"))
-print(normalize("ёжик, Ёлка"))
-print(normalize("Hello\r\nWorld"))
-print(normalize("  двойные   пробелы  "))
-
-print(tokenize("привет мир"))
-print(tokenize("hello,world!!!"))
-print(tokenize("по-настоящему круто"))
-print(tokenize("2025 год"))
-print(tokenize("emoji 😀 не слово"))
-
-print(count_freq(["a", "b", "a", "c", "b", "a"]))
-print(count_freq(["bb", "aa", "bb", "aa", "cc"]))
-
-freq0 = {"a": 3, "b": 2, "c": 1}
-print(top_n(freq0, 2))
-freq1 = {"bb": 2, "aa": 2, "cc": 1}
-print(top_n(freq1, 2))
-```
-
-## Вывод
-![Картинка 1](./images/lab_03/text_output.png)
-
-# Задание B
+# Задание А src/lab05/json_csv.py
 
 ```python
 import sys
 import os
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-
-from lib.text import normalize, tokenize, count_freq, top_n
-
-def main():
-    text = input()
-    
-    if not text.strip():
-        raise ValueError('Нет текста :(')
-    
-    normalized_text = normalize(text, casefold=True, yo2e=True)
-    tokens = tokenize(normalized_text)
-    total_words = len(tokens)
-    unique_words = len(set(tokens))
-    freq = count_freq(tokens)
-    top_words = top_n(freq, 5)
-    
-    print(f"Всего слов: {total_words}")
-    print(f"Уникальных слов: {unique_words}")
-    print("Топ-5:")
-    for word, count in top_words:
-        print(f"{word}:{count}")
-
-if __name__ == "__main__":
-    main()
-```
-## Вывод
-![Картинка 2](./images/lab_03/text_stats_output.png)
-
-# Общий вывод
-
-В лабораторной №3 разработан текстовый анализатор с четырьмя основными функциями: нормализация, токенизация, подсчет частот и вывод топ-N слов. Программа text_stats.py анализирует ввод пользователя и показывает общую статистику: total слов, unique слов и 5 самых частых слов. Все модули протестированы и готовы к интеграции в будущие проекты.
-
-
-
-# Лабороторная работа 4
-
-## src/lab04/io_txt_csv.py
-
-```python
-import csv
-from pathlib import Path
-from typing import Dict, List, Tuple
-
-
-def read_text(path: Path) -> str:
-    """Читает текст из .txt файла."""
-    with open(path, "r", encoding="utf-8") as f:
-        return f.read()
-
-
-def write_csv(path: Path, rows: List[Tuple[str, int]]) -> None:
-    """Записывает частоты слов в CSV."""
-    with open(path, "w", encoding="utf-8", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(["word", "count"])
-        writer.writerows(rows)
-```
-# Задание B
-## src/lab04/text_report.py
-
-```python
-import sys
-import os
-from pathlib import Path
-
-# Добавляем src в sys.path
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-# Импорт из предыдущей лабы
-from lib.text import normalize, tokenize, count_freq, top_n
-
-# Импорт из io_txt_csv.py
-from lab_04.io_txt_csv import read_text, write_csv
+from pathlib import Path
+import json
+import csv
 
 
-def main():
-    if len(sys.argv) < 3:
-        print("Использование: python3 src/lab_04/text_report.py <входной_файл> <выходной_файл.csv>")
-        sys.exit(1)
+def json_to_csv(json_path: str, csv_path: str) -> None:
+    json_path = Path(json_path)
+    csv_path = Path(csv_path)
 
-    input_path = Path(sys.argv[1])
-    output_path = Path(sys.argv[2])
+    if not json_path.exists():
+        raise FileNotFoundError(f"Файл не найден: {json_path}")
 
-    # 1. Читаем текст
-    text = read_text(input_path)
+    with open(json_path, "r", encoding="utf-8") as f:
+        try:
+            data = json.load(f)
+        except json.JSONDecodeError:
+            raise ValueError("Некорректный JSON-файл")
 
-    # 2. Обрабатываем (из лабы 3)
-    norm_text = normalize(text)
-    tokens = tokenize(norm_text)
-    freq = count_freq(tokens)
+    if not isinstance(data, list) or not data:
+        raise ValueError()
 
-    # 3. Статистика
-    total = len(tokens)
-    unique = len(set(tokens))
-    top = top_n(freq, 10)
+    # Сбор всех возможных ключей (чтобы заполнить пропуски пустыми строками)
+    all_keys = set()
+    for item in data:
+        if not isinstance(item, dict):
+            raise ValueError()
+        all_keys.update(item.keys())
 
-    # 4. Запись CSV
-    write_csv(output_path, list(freq.items()))
+    # Порядок колонок — как в первом объекте, затем остальные по алфавиту
+    first_keys = list(data[0].keys())
+    remaining_keys = sorted(all_keys - set(first_keys))
+    headers = first_keys + remaining_keys
 
-    # 5. Создаём отчёт (txt)
-    report_path = output_path.with_suffix(".report.txt")
-    with open(report_path, "w", encoding="utf-8") as f:
-        f.write(f"Всего слов: {total}\n")
-        f.write(f"Уникальных слов: {unique}\n")
-        f.write("Топ-10 слов:\n")
-        for word, count in top:
-            f.write(f"{word}: {count}\n")
+    with open(csv_path, "w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=headers)
+        writer.writeheader()
+        for item in data:
+            row = {key: item.get(key, "") for key in headers}
+            writer.writerow(row)
 
-    print(f"Отчёт сохранён в {report_path}")
-    print(f"CSV сохранён в {output_path}")
+
+def csv_to_json(csv_path: str, json_path: str) -> None:
+    csv_path = Path(csv_path)
+    json_path = Path(json_path)
+
+    if not csv_path.exists():
+        raise FileNotFoundError(f"Файл не найден: {csv_path}")
+
+    with open(csv_path, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        if not reader.fieldnames:
+            raise ValueError("CSV не содержит заголовок")
+
+        data = list(reader)
+        if not data:
+            raise ValueError("CSV пуст")
+
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) < 3:
+        print("Использование: python3 src/lab_05/json_csv.py <режим> <input_file>")
+        print("Режимы: json2csv, csv2json")
+        sys.exit(1)
+
+    mode = sys.argv[1].lower()
+    input_file = sys.argv[2]
+    
+    # Определяем базовую директорию относительно расположения скрипта
+    base = Path(__file__).resolve().parent.parent.parent
+    out_dir = base / "data" / "out"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    input_path = Path(input_file)
+    
+    if mode == "json2csv":
+        output_file = out_dir / f"{input_path.stem}.csv"
+        json_to_csv(input_file, output_file)
+        print(f"Создан: {output_file}")
+        
+    elif mode == "csv2json":
+        output_file = out_dir / f"{input_path.stem}.json"
+        csv_to_json(input_file, output_file)
+        print(f"Создан: {output_file}")
+        
+    else:
+        print("Неизвестный режим. Используйте: json2csv или csv2json")
 ```
+### Для работа программы нужно ввести команду "python3 src/lab_05/json_csv.py <режим> <input_file>". 
+## Доступные режимы:
+### json2csv - режим, который делает из JSON-файла CSV-файл.
+### csv2json - режим, который делает из CSV-файла JSON-файл.
 
-### Для работы программы нам необходимо запустить ее и в терминале написать "python3 src/lab_04/text_report.py <входной_файл> <выходной_файл.csv>", где <входной_файл> - это текстовый документ, куда написан необходимый для обработки текст, а <выходной_файл.csv> - csv-файл. Входной файл должен быть изначально добавлен в папку data, а выходной файл будет создан автоматически в той же папке.
+## Примеры работы программы (для каждого преобразования бралось по два файла):
 
-# Пример
-## Изначальный текстовый файл.
-![Картинка 1](./images/lab_04/input.png)
+## JSON→CSV
+### Изначальные файлы (people.json и books.json) в папке samples:
 
-## Введение комманд и вывод программы.
-![Картинка 2](./images/lab_04/step1.png)
+![Картинка 1](./images/lab_05/json_people_input.png)
 
-## Папка data сразу после работы программы.
-![Картинка 3](./images/lab_04/data.png)
+![Картинка 2](./images/lab_05/json_books_input.png)
 
-## Внутри csv-файла.
-![Картинка 4](./images/lab_04/flowers_csv.png)
+### Команды в терминале (во избежание большого количества скриншотов, буду показывать только на одном файле):
 
-## Внутри txt-файла.
-![Картинка 5](./images/lab_04/flowers_txt.png)
+![Картинка 3](./images/lab_05/terminal_books.png)
+
+### CSV-файлы появились в папке data/out/
+
+![Картинка 4](./images/lab_05/people_output.png)
+
+![Картинка 5](./images/lab_05/books_output.png)
+
+
+
+## CSV→JSON
+### Изначальные файлы (people.csv и fruits.csv):
+
+![Картинка 1](./images/lab_05/csv_people_input.png)
+
+![Картинка 2](./images/lab_05/csv_fruits_input.png)
+
+### Команды в терминале:
+
+![Картинка 3](./images/lab_05/terminal_fruits.png)
+
+### JSON-файлы появились в папке data/out/
+
+![Картинка 4](./images/lab_05/people_output2.png)
+
+![Картинка 5](./images/lab_05/fruits_output.png)
+
+
+
+# Задание B src/lab05/csv_xlsx.py
+
+```python
+import sys
+import os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
+import csv
+from pathlib import Path
+from openpyxl import Workbook
+
+
+def csv_to_xlsx(csv_path: Path, xlsx_path: Path) -> None:
+    """
+    Конвертирует CSV-файл в XLSX (Excel).
+    """
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Data"
+
+    with open(csv_path, "r", encoding="utf-8") as f:
+        reader = csv.reader(f)
+        for row in reader:
+            ws.append(row)
+
+    wb.save(xlsx_path)
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print("Использование: python3 src/lab_05/csv_to_xlsx.py <режим> <input_file>")
+        print("Режимы: csv2xlsx")
+        sys.exit(1)
+
+    mode = sys.argv[1].lower()
+    input_file = sys.argv[2]
+
+    base = Path(__file__).resolve().parent.parent.parent
+    out_dir = base / "data" / "out"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    input_path = Path(input_file)
+
+    if mode == "csv2xlsx":
+        output_file = out_dir / f"{input_path.stem}.xlsx"
+        csv_to_xlsx(input_file, output_file)
+        print(f"Создан: {output_file}")
+
+    else:
+        print("Неизвестный режим. Используйте: csv2xlsx")
+```
+### Для данного задания была задействована библеотека openpyxl, которая была скачена через текст "openpyxl==3.1.5" в файле requirements.txt, а также в терминале была использованна команда "pip3 install -r requirements.txt". Для работы программы нужно ввести команду "python3 src/lab_05/csv_to_xlsx.py <режим> <input_file>"
+## Доступные режимы:
+### csv2xlsx - режим, который делает из CSV-файла XLSX-файл.
+
+## Примеры работы программы 
+
+## CSV→XLSX
+### Изначальные файлы (cities.csv и ID.csv) в папке samples:
+
+![Картинка 1](./images/lab_05/cities_input.png)
+
+![Картинка 2](./images/lab_05/ID_input.png)
+
+### Команды в терминале:
+
+![Картинка 3](./images/lab_05/terminal_ID.png)
+
+### XLSX-файлы появились в папке data/out/
+
+![Картинка 4](./images/lab_05/xlsx_output.png)
+
+### Файлы в Excel:
+![Картинка 5](./images/lab_05/cities_output.png)
+
+![Картинка 6](./images/lab_05/ID_output.png)
+
+# Вывод: 
+### В ходе лабораторной работы была реализована программа для конвертации файлов между форматами CSV, XLSX и JSON с использованием языка Python и библиотек openpyxl. В результате программа представляет собой гибкий инструмент для преобразования данных между тремя широко распространенными форматами, что закрепляет понимание их структуры и принципов работы с ними.
