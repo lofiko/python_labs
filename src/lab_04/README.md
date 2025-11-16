@@ -84,17 +84,17 @@ if __name__ == "__main__":
 
 # Пример
 ## Изначальный текстовый файл.
-![Картинка 1](./images/lab_04/input.png)
+![Картинка 1](../../images/lab_04/input.png)
 
 ## Введение комманд и вывод программы.
-![Картинка 2](./images/lab_04/step1.png)
+![Картинка 2](../../images/lab_04/step1.png)
 
 ## Папка data сразу после работы программы.
-![Картинка 3](./images/lab_04/data.png)
+![Картинка 3](../../images/lab_04/data.png)
 
 ## Внутри csv-файла.
-![Картинка 4](./images/lab_04/flowers_csv.png)
+![Картинка 4](../../images/lab_04/flowers_csv.png)
 
 ## Внутри txt-файла.
-![Картинка 5](./images/lab_04/flowers_txt.png)
+![Картинка 5](../../images/lab_04/flowers_txt.png)
 

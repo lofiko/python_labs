@@ -69,7 +69,7 @@ print(top_n(freq1, 2))
 ```
 
 ## Вывод
-![Картинка 1](./images/lab_03/text_output.png)
+![Картинка 1](../../images/lab_03/text_output.png)
 
 # Задание B
 
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     main()
 ```
 ## Вывод
-![Картинка 2](./images/lab_03/text_stats_output.png)
+![Картинка 2](../../images/lab_03/text_stats_output.png)
 
 # Общий вывод
 
