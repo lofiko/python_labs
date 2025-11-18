@@ -294,7 +294,7 @@ if __name__ == "__main__":
 
 **Синтаксис:**
 ```bash
-python src/lab_06/cli_text.py cat --input <путь_к_файлу> [-n]
+python3 src/lab_06/cli_text.py cat --input <путь_к_файлу> [-n]
 ```
 
 **Параметры:**
@@ -304,10 +304,10 @@ python src/lab_06/cli_text.py cat --input <путь_к_файлу> [-n]
 **Примеры использования:**
 ```bash
 # Простой вывод файла
-python src/lab06/cli_text.py cat --input data/lab06/samples/people.csv
+python3 src/lab06/cli_text.py cat --input data/lab06/samples/people.csv
 
 # Вывод с нумерацией строк
-python src/lab06/cli_text.py cat --input data/lab06/samples/people.csv -n
+python3 src/lab06/cli_text.py cat --input data/lab06/samples/people.csv -n
 ```
 
 **Особенности реализации:**
@@ -320,7 +320,7 @@ python src/lab06/cli_text.py cat --input data/lab06/samples/people.csv -n
 
 **Синтаксис:**
 ```bash
-python src/lab_06/cli_text.py stats --input <путь_к_файлу> [--top N]
+python3 src/lab_06/cli_text.py stats --input <путь_к_файлу> [--top N]
 ```
 
 **Параметры:**
@@ -330,10 +330,10 @@ python src/lab_06/cli_text.py stats --input <путь_к_файлу> [--top N]
 **Примеры использования:**
 ```bash
 # Анализ с топ-5 словами (по умолчанию)
-python src/lab_06/cli_text.py stats --input data/lab_06/samples/text.txt
+python3 src/lab_06/cli_text.py stats --input data/lab_06/samples/text.txt
 
 # Анализ с топ-7 словами
-python src/lab_06/cli_text.py stats --input data/lab_06/samples/text.txt --top 7
+python3 src/lab_06/cli_text.py stats --input data/lab_06/samples/text.txt --top 7
 ```
 
 **Особенности реализации:**
@@ -349,7 +349,7 @@ python src/lab_06/cli_text.py stats --input data/lab_06/samples/text.txt --top 7
 
 **Синтаксис:**
 ```bash
-python src/lab_06/cli_convert.py json2csv --input <входной_json> --output <выходной_csv>
+python3 src/lab_06/cli_convert.py json2csv --input <входной_json> --output <выходной_csv>
 ```
 
 **Параметры:**
@@ -358,7 +358,7 @@ python src/lab_06/cli_convert.py json2csv --input <входной_json> --output
 
 **Пример:**
 ```bash
-python src/lab_06/cli_convert.py json2csv --input data/lab_06/samples/people.json --output data/lab_06/out/people.csv
+python3 src/lab_06/cli_convert.py json2csv --input data/lab_06/samples/people.json --output data/lab_06/out/people.csv
 ```
 
 #### Подкоманда `csv2json`
@@ -366,7 +366,7 @@ python src/lab_06/cli_convert.py json2csv --input data/lab_06/samples/people.jso
 
 **Синтаксис:**
 ```bash
-python src/lab_06/cli_convert.py csv2json --input <входной_csv> --output <выходной_json>
+python3 src/lab_06/cli_convert.py csv2json --input <входной_csv> --output <выходной_json>
 ```
 
 **Параметры:**
@@ -375,7 +375,7 @@ python src/lab_06/cli_convert.py csv2json --input <входной_csv> --output 
 
 **Пример:**
 ```bash
-python src/lab_06/cli_convert.py csv2json --input data/lab_06/samples/cities.csv --output data/lab_06/out/cities.json
+python3 src/lab_06/cli_convert.py csv2json --input data/lab_06/samples/cities.csv --output data/lab_06/out/cities.json
 ```
 
 #### Подкоманда `csv2xlsx`
@@ -383,7 +383,7 @@ python src/lab_06/cli_convert.py csv2json --input data/lab_06/samples/cities.csv
 
 **Синтаксис:**
 ```bash
-python src/lab_06/cli_convert.py csv2xlsx --input <входной_csv> --output <выходной_xlsx>
+python3 src/lab_06/cli_convert.py csv2xlsx --input <входной_csv> --output <выходной_xlsx>
 ```
 
 **Параметры:**
@@ -392,7 +392,7 @@ python src/lab_06/cli_convert.py csv2xlsx --input <входной_csv> --output 
 
 **Пример:**
 ```bash
-python src/lab_06/cli_convert.py csv2xlsx --input data/lab_06/samples/ID.csv --out data/lab_06/out/ID.xlsx
+python3 src/lab_06/cli_convert.py csv2xlsx --input data/lab_06/samples/ID.csv --out data/lab_06/out/ID.xlsx
 ```
 
 **Особенности реализации:**
@@ -407,11 +407,11 @@ python src/lab_06/cli_convert.py csv2xlsx --input data/lab_06/samples/ID.csv --o
 
 ```bash
 # Общая справка по модулю
-python src/lab06/cli_text.py --help
-python src/lab06/cli_convert.py --help
+python3 src/lab06/cli_text.py --help
+python3 src/lab06/cli_convert.py --help
 
 # Справка по конкретной подкоманде
-python src/lab06/cli_text.py cat --help
-python src/lab06/cli_text.py stats --help
-python src/lab06/cli_convert.py json2csv --help
+python3 src/lab06/cli_text.py cat --help
+python3 src/lab06/cli_text.py stats --help
+python3 src/lab06/cli_convert.py json2csv --help
 ```
