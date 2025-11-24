@@ -14,7 +14,9 @@ from lab_04.io_txt_csv import read_text, write_csv
 
 def main():
     if len(sys.argv) < 3:
-        print("Использование: python3 src/lab_04/text_report.py <входной_файл> <выходной_файл.csv>")
+        print(
+            "Использование: python3 src/lab_04/text_report.py <входной_файл> <выходной_файл.csv>"
+        )
         sys.exit(1)
 
     input_path = Path(sys.argv[1])

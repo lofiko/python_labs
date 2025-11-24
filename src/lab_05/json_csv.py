@@ -1,5 +1,6 @@
 import sys
 import os
+
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 from pathlib import Path
@@ -71,23 +72,23 @@ if __name__ == "__main__":
 
     mode = sys.argv[1].lower()
     input_file = sys.argv[2]
-    
+
     # Определяем базовую директорию относительно расположения скрипта
     base = Path(__file__).resolve().parent.parent.parent
     out_dir = base / "data" / "out"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     input_path = Path(input_file)
-    
+
     if mode == "json2csv":
         output_file = out_dir / f"{input_path.stem}.csv"
         json_to_csv(input_file, output_file)
         print(f"Создан: {output_file}")
-        
+
     elif mode == "csv2json":
         output_file = out_dir / f"{input_path.stem}.json"
         csv_to_json(input_file, output_file)
         print(f"Создан: {output_file}")
-        
+
     else:
         print("Неизвестный режим. Используйте: json2csv или csv2json")
