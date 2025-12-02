@@ -40,9 +40,9 @@ from datetime import datetime, date
 @dataclass
 class Student:
     fio: str
-    birthdate: str   # формат YYYY-MM-DD
+    birthdate: str
     group: str
-    gpa: float       # 0..5
+    gpa: float
 
     def __post_init__(self):
         # Проверка формата даты
@@ -56,7 +56,7 @@ class Student:
             raise ValueError("GPA must be between 0 and 5")
 
     def age(self) -> int:
-        """Возвращает количество полных лет."""
+        # Кол-во полних лет
         bdate = datetime.strptime(self.birthdate, "%Y-%m-%d").date()
         today = date.today()
         years = today.year - bdate.year
@@ -65,7 +65,7 @@ class Student:
         return years
 
     def to_dict(self) -> dict:
-        """Сериализация в словарь."""
+        # Сериализация в словарь
         return {
             "fio": self.fio,
             "birthdate": self.birthdate,
@@ -75,7 +75,7 @@ class Student:
 
     @classmethod
     def from_dict(cls, data: dict) -> "Student":
-        """Создание объекта из словаря."""
+        # Создание объекта из словаря
         return cls(
             fio=data["fio"],
             birthdate=data["birthdate"],
@@ -95,18 +95,15 @@ from .models import Student
 
 
 def students_to_json(students, path):
-    """Сохраняет список студентов в JSON-файл."""
     data = [s.to_dict() for s in students]
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
 def students_from_json(path):
-    """Загружает список студентов из JSON-файла."""
     with open(path, "r", encoding="utf-8") as f:
         raw = json.load(f)
     return [Student.from_dict(item) for item in raw]
-
 ```
 
 ## 📄 Мой файл data/lab_08/students_input.json

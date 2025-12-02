@@ -6,9 +6,9 @@ from datetime import datetime, date
 @dataclass
 class Student:
     fio: str
-    birthdate: str   # формат YYYY-MM-DD
+    birthdate: str
     group: str
-    gpa: float       # 0..5
+    gpa: float
 
     def __post_init__(self):
         # Проверка формата даты
@@ -22,7 +22,7 @@ class Student:
             raise ValueError("GPA must be between 0 and 5")
 
     def age(self) -> int:
-        """Возвращает количество полных лет."""
+        # Кол-во полних лет
         bdate = datetime.strptime(self.birthdate, "%Y-%m-%d").date()
         today = date.today()
         years = today.year - bdate.year
@@ -31,7 +31,7 @@ class Student:
         return years
 
     def to_dict(self) -> dict:
-        """Сериализация в словарь."""
+        # Сериализация в словарь
         return {
             "fio": self.fio,
             "birthdate": self.birthdate,
@@ -41,7 +41,7 @@ class Student:
 
     @classmethod
     def from_dict(cls, data: dict) -> "Student":
-        """Создание объекта из словаря."""
+        # Создание объекта из словаря
         return cls(
             fio=data["fio"],
             birthdate=data["birthdate"],
